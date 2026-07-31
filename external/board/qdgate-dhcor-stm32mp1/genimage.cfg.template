@@ -1,0 +1,55 @@
+image sdcard.img {
+	hdimage {
+		partition-table-type = "gpt"
+	}
+
+	# SD-card layout:
+	# 1) fsbl1   - TF-A image used by the ROM
+	# 2) fsbl2   - redundant TF-A image used by the ROM
+	# 3) fip     - TF-A FIP containing BL31, OP-TEE and U-Boot
+	# 4) rootfsA - active initial RAUC rootfs slot
+	# 5) rootfsB - inactive RAUC rootfs slot
+	# 6) dataA
+	# 7) dataB
+
+	partition fsbl1 {
+		image = "%ATFBIN%"
+	}
+
+	partition fsbl2 {
+		image = "%ATFBIN%"
+	}
+
+	partition fip {
+		image = "fip.bin"
+		partition-type-uuid = 19d5df83-11b0-457b-be2c-7559c13142a5
+		size = 4M
+	}
+
+	partition rootfsA {
+		image = "rootfs.ext4"
+		size = 1G
+	}
+
+	partition rootfsB {
+		image = "rootfs.ext4"
+		size = 1G
+	}
+
+	partition dataA {
+		image = "data.ext4"
+		size = 1651200s
+	}
+
+	partition dataB {
+		image = "data.ext4"
+		size = 1651200s
+	}
+}
+
+image data.ext4 {
+	ext4 {
+		label = "data"
+	}
+	size = 1651200s
+}
