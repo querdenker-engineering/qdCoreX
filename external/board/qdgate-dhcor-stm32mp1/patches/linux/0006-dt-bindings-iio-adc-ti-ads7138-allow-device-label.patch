@@ -1,0 +1,16 @@
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti,ads7138.yaml b/Documentation/devicetree/bindings/iio/adc/ti,ads7138.yaml
+--- a/Documentation/devicetree/bindings/iio/adc/ti,ads7138.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/ti,ads7138.yaml
+@@ -37,8 +37,12 @@ properties:
+     description:
+       Interrupt on ALERT pin, triggers on low level.
+     maxItems: 1
+ 
++  label:
++    description: Descriptive name of the ADC.
++    $ref: /schemas/types.yaml#/definitions/string
++ 
+ required:
+   - compatible
+   - reg
+   - avdd-supply

@@ -451,12 +451,14 @@
 		compatible = "ti,ads7128";
 		reg = <0x16>;
 		avdd-supply = <&reg_3v0_ref>;
+		label = "ADC 2";
 	};
 
 	ads7128_1: adc@17 {
 		compatible = "ti,ads7128";
 		reg = <0x17>;
 		avdd-supply = <&reg_3v0_ref>;
+		label = "ADC 1";
 	};
 };
 
