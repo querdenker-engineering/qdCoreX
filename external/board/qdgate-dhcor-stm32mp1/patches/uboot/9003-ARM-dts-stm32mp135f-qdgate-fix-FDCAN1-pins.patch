@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: qdCoreX <development@qdcorex.local>
+Date: Sun, 6 Sep 2026 18:00:00 +0200
+Subject: [PATCH] ARM: dts: stm32mp135f-dhcor-dhsbc: fix FDCAN1 pins
+
+The qdGate carrier uses PG9 as FDCAN1_RX.  PD0 is a digital input on
+the carrier and must remain available to the GPIO controller.
+
+Signed-off-by: qdCoreX <development@qdcorex.local>
+---
+ dts/upstream/src/arm/st/stm32mp135f-dhcor-dhsbc.dts | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/dts/upstream/src/arm/st/stm32mp135f-dhcor-dhsbc.dts b/dts/upstream/src/arm/st/stm32mp135f-dhcor-dhsbc.dts
+--- a/dts/upstream/src/arm/st/stm32mp135f-dhcor-dhsbc.dts
++++ b/dts/upstream/src/arm/st/stm32mp135f-dhcor-dhsbc.dts
+@@ -74,6 +74,28 @@
+ 	};
+ };
+ 
++&pinctrl {
++	m_can1_pins_qdgate: m-can1-qdgate-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('G', 10, AF9)>; /* FDCAN1_TX */
++			slew-rate = <1>;
++			drive-push-pull;
++			bias-disable;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('G', 9, AF9)>; /* FDCAN1_RX */
++			bias-disable;
++		};
++	};
++
++	m_can1_sleep_pins_qdgate: m-can1-qdgate-sleep-0 {
++		pins {
++			pinmux = <STM32_PINMUX('G', 10, ANALOG)>, /* FDCAN1_TX */
++				 <STM32_PINMUX('G', 9, ANALOG)>; /* FDCAN1_RX */
++		};
++	};
++};
++
+ &ethernet1 {
+ 	nvmem-cell-names = "mac-address";
+ 	nvmem-cells = <&ethernet_mac1_address>;
+@@ -264,6 +286,6 @@
+ &m_can1 { /* Expansion connector: TX:pin16 RX:pin18 */
+ 	pinctrl-names = "default", "sleep";
+-	pinctrl-0 = <&m_can1_pins_a>;
+-	pinctrl-1 = <&m_can1_sleep_pins_a>;
++	pinctrl-0 = <&m_can1_pins_qdgate>;
++	pinctrl-1 = <&m_can1_sleep_pins_qdgate>;
+ 	status = "okay";
+ };

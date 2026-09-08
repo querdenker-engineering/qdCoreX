@@ -1,11 +1,25 @@
 #!/bin/bash
 
+POST_BUILD_SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
 fixup_extlinux_dtb_name()
 {
 	# BR2_LINUX_KERNEL_INTREE_DTS_NAME can contain multiple space-separated DTB
 	# names; extlinux.conf expects a single FDT file, so we take the first.
 	local DTB_NAME
 	DTB_NAME="$(sed -n 's/^BR2_LINUX_KERNEL_INTREE_DTS_NAME="\(.*\)"$/\1/p' "${BR2_CONFIG}" | awk '{print $1}')"
+	if [ -z "${DTB_NAME}" ]; then
+		# Out-of-tree DTBs are installed without their source directory by
+		# default. Prefer the DTS from this board's custom source directory;
+		# this also avoids selecting a stale DTB from an incremental build.
+		local CUSTOM_DTS
+		CUSTOM_DTS="$(find "${POST_BUILD_SCRIPT_DIR}/linux/dts" -type f -name '*.dts' -printf '%f\n' | sort | head -n 1)"
+		DTB_NAME="${CUSTOM_DTS%.dts}"
+		if [ -z "${DTB_NAME}" ]; then
+			DTB_NAME="$(find "${TARGET_DIR}/boot" -maxdepth 1 -type f -name '*.dtb' -printf '%f\n' | sort | head -n 1)"
+			DTB_NAME="${DTB_NAME%.dtb}"
+		fi
+	fi
 	if [ -z "${DTB_NAME}" ]; then
 		echo "Can not determine the device tree name from ${BR2_CONFIG}"
 		exit 1
