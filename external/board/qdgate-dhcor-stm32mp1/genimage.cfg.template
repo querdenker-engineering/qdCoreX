@@ -1,55 +1,106 @@
+include("%EMMC_CFG%")
+
 image sdcard.img {
 	hdimage {
 		partition-table-type = "gpt"
 	}
 
-	# SD-card layout:
-	# 1) fsbl1   - TF-A image used by the ROM
-	# 2) fsbl2   - redundant TF-A image used by the ROM
-	# 3) fip     - TF-A FIP containing BL31, OP-TEE and U-Boot
-	# 4) rootfsA - active initial RAUC rootfs slot
-	# 5) rootfsB - inactive RAUC rootfs slot
-	# 6) dataA
-	# 7) dataB
+	# The SD-card image keeps fsbl1/fsbl2 in the user area because they are
+	# needed by the SD-card ROM boot flow. On eMMC, the corresponding FSBL
+	# copies are stored in the hardware boot1/boot2 areas by the TSV layout.
 
 	partition fsbl1 {
 		image = "%ATFBIN%"
+		partition-type-uuid = 8da63339-0007-60c0-c436-083ac8230908
 	}
 
 	partition fsbl2 {
 		image = "%ATFBIN%"
+		partition-type-uuid = 8da63339-0007-60c0-c436-083ac8230908
 	}
 
-	partition fip {
+	partition metadata1 {
+		image = "metadata.bin"
+		partition-type-uuid = 8a7a84a0-8387-40f6-ab41-a8b9a5a60d23
+		size = 512K
+	}
+
+	partition metadata2 {
+		image = "metadata.bin"
+		partition-type-uuid = 8a7a84a0-8387-40f6-ab41-a8b9a5a60d23
+		size = 512K
+	}
+
+	partition fip-a {
 		image = "fip.bin"
 		partition-type-uuid = 19d5df83-11b0-457b-be2c-7559c13142a5
 		size = 4M
 	}
 
+	partition fip-b {
+		image = "fip.bin"
+		partition-type-uuid = 19d5df83-11b0-457b-be2c-7559c13142a5
+		size = 4M
+	}
+
+	partition u-boot-env {
+		partition-type-uuid = 3de21764-95db-54bd-a5c3-4abe786f38a8
+		size = 512K
+	}
+
+	partition bootfsA {
+		image = "bootfs.ext4"
+		partition-type-uuid = 0fc63daf-8483-4772-8e79-3d69d8477de4
+		bootable = true
+		size = 64M
+	}
+
+	partition bootfsB {
+		image = "bootfs.ext4"
+		partition-type-uuid = 0fc63daf-8483-4772-8e79-3d69d8477de4
+		bootable = true
+		size = 64M
+	}
+
 	partition rootfsA {
 		image = "rootfs.ext4"
-		size = 1G
+		partition-type-uuid = 0fc63daf-8483-4772-8e79-3d69d8477de4
+		size = 768081920
 	}
 
 	partition rootfsB {
 		image = "rootfs.ext4"
-		size = 1G
+		partition-type-uuid = 0fc63daf-8483-4772-8e79-3d69d8477de4
+		size = 768081920
 	}
 
 	partition dataA {
-		image = "data.ext4"
-		size = 1651200s
+		image = "userfs.ext4"
+		partition-type-uuid = 0fc63daf-8483-4772-8e79-3d69d8477de4
+		size = 1095761920
 	}
 
 	partition dataB {
-		image = "data.ext4"
-		size = 1651200s
+		image = "userfs.ext4"
+		partition-type-uuid = 0fc63daf-8483-4772-8e79-3d69d8477de4
+		size = 1095761920
 	}
 }
 
-image data.ext4 {
+image bootfs.ext4 {
 	ext4 {
+		use-mke2fs = true
+		label = "boot"
+	}
+	srcpath = "%BOOTFS_SOURCE%"
+	size = 64M
+}
+
+image userfs.ext4 {
+	ext4 {
+		use-mke2fs = true
 		label = "data"
 	}
-	size = 1651200s
+	empty = true
+	size = 1095761920
 }
