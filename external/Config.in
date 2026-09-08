@@ -1,0 +1,26 @@
+menu "OS configuration"
+
+config BR2_OS_NAME
+    string "OS name"
+    default "qdCoreX"
+    help
+      Human-readable name of the operating system.
+
+config BR2_OS_ID
+    string "OS ID"
+    default "qdcorex"
+    help
+      Machine-readable operating system identifier.
+
+config BR2_OS_VERSION
+    string "OS version"
+    default "0.2.0"
+    help
+      Version of the resulting operating system.
+
+config BR2_QDCOREX_VERSION
+    string "qdCoreX version"
+    help
+      Version of the qdCoreX platform used to build this OS.
+
+endmenu
