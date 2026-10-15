@@ -6,4 +6,4 @@ include:
 variables:
   BUILDROOT_DIRECTORY: buildroot
   BUILDROOT_BR2_EXTERNAL: ../external
-  BUILDROOT_PROJECT_NAME: qdcorex_qdgate-dhcor-stm32mp1
+  BUILDROOT_PROJECT_NAME: qdcorex_qdgate_stm32mp1
