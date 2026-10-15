@@ -1,0 +1,74 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: qdCoreX <development@qdcorex.local>
+Subject: [PATCH] stm32mp1: add qdGate STM32MP135 device trees
+
+Add qdGate-named board and firmware-configuration trees.
+
+---
+diff --git a/fdts/stm32mp135f-qdgate.dts b/fdts/stm32mp135f-qdgate.dts
+new file mode 100644
+--- /dev/null
++++ b/fdts/stm32mp135f-qdgate.dts
+@@ -0,0 +1,49 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) 2024 Marek Vasut <marex@denx.de>
++ * Copyright (C) 2026 querdenker engineering GmbH
++ *
++ * qdGate STM32MP135 board.
++ */
++
++/dts-v1/;
++
++#include "stm32mp135.dtsi"
++#include "stm32mp13xf.dtsi"
++#include "stm32mp13xx-dhcor-som.dtsi"
++
++/ {
++	model = "qdCoreX qdGate STM32MP135";
++	compatible = "qde,qdgate-stm32mp135f",
++		     "dh,stm32mp135f-dhcor-som",
++		     "st,stm32mp135";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	aliases {
++		serial0 = &uart4;
++	};
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart4_pins_b>;
++	status = "okay";
++};
++
++&pinctrl {
++	uart4_pins_b: uart4-1 {
++		pins1 {
++			pinmux = <STM32_PINMUX('A', 9, AF8)>; /* UART4_TX */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <0>;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('D', 8, AF8)>; /* UART4_RX */
++			bias-pull-up;
++		};
++	};
++};
+diff --git a/fdts/stm32mp135f-qdgate-fw-config.dts b/fdts/stm32mp135f-qdgate-fw-config.dts
+new file mode 100644
+--- /dev/null
++++ b/fdts/stm32mp135f-qdgate-fw-config.dts
+@@ -0,0 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) 2024 Marek Vasut <marex@denx.de>
++ * Copyright (C) 2026 querdenker engineering GmbH
++ */
++#define DDR_SIZE	0x20000000 /* 512MB */
++#include "stm32mp13-fw-config.dtsi"
++#include "stm32mp13-fw-config-mem-encrypt.dtsi"

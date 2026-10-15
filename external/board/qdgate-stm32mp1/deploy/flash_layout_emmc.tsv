@@ -1,8 +1,8 @@
 #Opt	Id	Name	Type	Device	Offset	Binary
--	0x01	fsbl-boot	Binary	none	0x0	tf-a-stm32mp135f-dhcor-dhsbc.stm32
+-	0x01	fsbl-boot	Binary	none	0x0	tf-a-stm32mp135f-qdgate.stm32
 -	0x03	fip-boot	FIP	none	0x0	fip.bin
-P	0x04	fsbl1	Binary	mmc0	boot1	tf-a-stm32mp135f-dhcor-dhsbc.stm32
-P	0x05	fsbl2	Binary	mmc0	boot2	tf-a-stm32mp135f-dhcor-dhsbc.stm32
+P	0x04	fsbl1	Binary	mmc0	boot1	tf-a-stm32mp135f-qdgate.stm32
+P	0x05	fsbl2	Binary	mmc0	boot2	tf-a-stm32mp135f-qdgate.stm32
 P	0x06	metadata1	FWU_MDATA	mmc0	0x00080000	metadata.bin
 P	0x07	metadata2	FWU_MDATA	mmc0	0x00100000	metadata.bin
 P	0x08	fip-a	FIP	mmc0	0x00180000	fip.bin

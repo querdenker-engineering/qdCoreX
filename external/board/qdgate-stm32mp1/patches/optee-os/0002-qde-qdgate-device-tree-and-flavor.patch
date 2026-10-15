@@ -1,0 +1,86 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: qdCoreX <development@qdcorex.local>
+Subject: [PATCH] stm32mp1: add qdGate device tree and platform flavor
+
+Provide the qdGate board DTS and a distinct OP-TEE platform flavor.
+
+---
+diff --git a/core/arch/arm/dts/stm32mp135f-qdgate.dts b/core/arch/arm/dts/stm32mp135f-qdgate.dts
+new file mode 100644
+--- /dev/null
++++ b/core/arch/arm/dts/stm32mp135f-qdgate.dts
+@@ -0,0 +1,49 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) 2024 Marek Vasut <marex@denx.de>
++ * Copyright (C) 2026 querdenker engineering GmbH
++ *
++ * qdGate STM32MP135 board.
++ */
++
++/dts-v1/;
++
++#include "stm32mp135.dtsi"
++#include "stm32mp13xf.dtsi"
++#include "stm32mp13xx-dhcor-som.dtsi"
++
++/ {
++	model = "qdCoreX qdGate STM32MP135";
++	compatible = "qde,qdgate-stm32mp135f",
++		     "dh,stm32mp135f-dhcor-som",
++		     "st,stm32mp135";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	aliases {
++		serial0 = &uart4;
++	};
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart4_pins_b>;
++	status = "okay";
++};
++
++&pinctrl {
++	uart4_pins_b: uart4-1 {
++		pins1 {
++			pinmux = <STM32_PINMUX('A', 9, AF8)>; /* UART4_TX */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <0>;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('D', 8, AF8)>; /* UART4_RX */
++			bias-pull-up;
++		};
++	};
++};
+diff --git a/core/arch/arm/plat-stm32mp1/conf.mk b/core/arch/arm/plat-stm32mp1/conf.mk
+--- a/core/arch/arm/plat-stm32mp1/conf.mk
++++ b/core/arch/arm/plat-stm32mp1/conf.mk
+@@ -11,11 +11,13 @@
+ flavor_dts_file-157C_EV1_SCMI = stm32mp157c-ev1-scmi.dts
+ 
+ flavor_dts_file-135F_DHCOR_DHSBC = stm32mp135f-dhcor-dhsbc.dts
++flavor_dts_file-135F_QDGATE = stm32mp135f-qdgate.dts
+ flavor_dts_file-135F_DK = stm32mp135f-dk.dts
+ 
+ flavorlist-cryp-512M = $(flavor_dts_file-157C_DK2) \
+ 		       $(flavor_dts_file-157C_DK2_SCMI) \
+ 		       $(flavor_dts_file-135F_DHCOR_DHSBC) \
++		       $(flavor_dts_file-135F_QDGATE) \
+ 		       $(flavor_dts_file-135F_DK)
+ 
+ flavorlist-no_cryp-512M = $(flavor_dts_file-157A_DK1) \
+@@ -59,6 +61,7 @@
+ 		  $(flavor_dts_file-157C_EV1_SCMI)
+ 
+ flavorlist-MP13 = $(flavor_dts_file-135F_DHCOR_DHSBC) \
++		  $(flavor_dts_file-135F_QDGATE) \
+ 		  $(flavor_dts_file-135F_DK)
+ 
+ ifneq ($(PLATFORM_FLAVOR),)
