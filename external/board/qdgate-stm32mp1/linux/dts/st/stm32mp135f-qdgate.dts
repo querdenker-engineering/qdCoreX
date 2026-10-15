@@ -3,7 +3,7 @@
  * Copyright (C) 2024 Marek Vasut <marex@denx.de>
  * Copyright (C) 2026 querdenker engineering GmbH
  *
- * Based on the Linux device tree stm32mp135f-dhcor-dhsbc.dts.
+ * Uses the upstream STM32MP13xx DHCOR SoM device-tree definitions.
  */
 
 /dts-v1/;
@@ -17,8 +17,8 @@
 #include "stm32mp13xx-dhcor-som.dtsi"
 
 / {
-	model = "qdCoreX qdGate STM32MP135F DHCOR";
-	compatible = "qde,qdgate-stm32mp135f-dhcor",
+	model = "qdCoreX qdGate STM32MP135";
+	compatible = "qde,qdgate-stm32mp135f",
 		     "dh,stm32mp135f-dhcor-som",
 		     "st,stm32mp135";
 
@@ -342,7 +342,7 @@
 	gpio-line-names = "DIO4", "UI_USER_BUTTON", "", "DIO4_OE",
 			  "nUSB_CLIENT_DETECT", "", "", "",
 			  "", "", "ESP32_SPI_HANDSHAKE", "nETH1_RST",
-			  "", "DHCOR_HW-CODING_0", "nRESET_IOEX", "DHSBC_HW-CODE_2";
+			  "", "HW_CODING_0", "nRESET_IOEX", "QDGATE_MB_CODE_2";
 };
 
 &gpiob {
@@ -361,9 +361,9 @@
 
 &gpiod {
 	gpio-line-names = "DIO3", "", "", "",
-			  "", "DHCOR_RAM-CODING_0", "", "",
-			  "", "DHCOR_RAM-CODING_1", "", "",
-			  "", "DHSBC_HW-CODE_1", "", "";
+			  "", "RAM_CODING_0", "", "",
+			  "", "RAM_CODING_1", "", "",
+			  "", "QDGATE_MB_CODE_1", "", "";
 };
 
 &gpioe {
@@ -388,17 +388,17 @@
 };
 
 &gpioh {
-	gpio-line-names = "", "", "", "DHSBC_HW-CODE_0",
+	gpio-line-names = "", "", "", "QDGATE_MB_CODE_0",
 			  "", "", "", "",
 			  "DIO2", "AIN2_SELECT_CURRENT", "", "",
 			  "USB_HUB_RESET", "", "", "";
 };
 
 &gpioi {
-	gpio-line-names = "RTC_nINT", "DHCOR_HW-CODING_1",
-			  "DIO3_OE", "DHCOR_PMIC_nINT",
-			  "DHSBC_BOOT0", "DHSBC_BOOT1",
-			  "DHSBC_BOOT2", "DIO3_OUTPUT_FAULT_N";
+	gpio-line-names = "RTC_nINT", "HW-CODING_1",
+			  "DIO3_OE", "PMIC_nINT",
+			  "BOOT0", "BOOT1",
+			  "BOOT2", "DIO3_OUTPUT_FAULT_N";
 };
 
 &i2c1 {
@@ -620,7 +620,6 @@
 	};
 };
 
-/* LDO2 is expansion connector 3V3 supply on STM32MP13xx DHCOR DHSBC rev.200 */
 &vdd_ldo2 {
 	regulator-always-on;
 	regulator-boot-on;
@@ -628,7 +627,6 @@
 	regulator-max-microvolt = <3300000>;
 };
 
-/* LDO5 is carrier board 3V3 supply on STM32MP13xx DHCOR DHSBC rev.200 */
 &vdd_sd {
 	regulator-always-on;
 	regulator-boot-on;
